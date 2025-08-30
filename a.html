@@ -83,6 +83,43 @@
             margin-bottom: 20px;
         }
         
+        .blocks-container {
+            display: none;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .category {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        
+        .category-title {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            padding-bottom: 8px;
+            border-bottom: 3px solid;
+        }
+        
+        .category-title i.toggle-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .category.expanded .category-title i.toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .category.expanded .blocks-container {
+            display: grid;
+        }
+        
         .workspace-container {
             flex: 3;
             display: flex;
@@ -530,7 +567,10 @@
             <div class="toolbox">
                 <div class="toolbox-section">
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-cube" style="color: #e74c3c;"></i> Variables</div>
+                        <div class="category-title">
+                            <i class="fas fa-cube" style="color: #e74c3c;"></i> Variables
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block variable" draggable="true" data-type="int">
                                 <div class="block-icon"><i class="fas fa-hashtag"></i></div>
@@ -548,7 +588,10 @@
                     </div>
                     
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-sync-alt" style="color: #3498db;"></i> Control Structures</div>
+                        <div class="category-title">
+                            <i class="fas fa-sync-alt" style="color: #3498db;"></i> Control Structures
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block control" draggable="true" data-type="if">
                                 <div class="block-icon"><i class="fas fa-question"></i></div>
@@ -566,7 +609,10 @@
                     </div>
                     
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-exchange-alt" style="color: #2ecc71;"></i> I/O Operations</div>
+                        <div class="category-title">
+                            <i class="fas fa-exchange-alt" style="color: #2ecc71;"></i> I/O Operations
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block io" draggable="true" data-type="printf">
                                 <div class="block-icon"><i class="fas fa-print"></i></div>
@@ -582,7 +628,10 @@
                 
                 <div class="toolbox-section">
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-calculator" style="color: #f39c12;"></i> Operations</div>
+                        <div class="category-title">
+                            <i class="fas fa-calculator" style="color: #f39c12;"></i> Operations
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block operation" draggable="true" data-type="assignment">
                                 <div class="block-icon"><i class="fas fa-equals"></i></div>
@@ -596,7 +645,10 @@
                     </div>
                     
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-arrows-alt" style="color: #9b59b6;"></i> Pointers</div>
+                        <div class="category-title">
+                            <i class="fas fa-arrows-alt" style="color: #9b59b6;"></i> Pointers
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block pointer" draggable="true" data-type="pointer_decl">
                                 <div class="block-icon"><i class="fas fa-asterisk"></i></div>
@@ -610,7 +662,10 @@
                     </div>
                     
                     <div class="category">
-                        <div class="category-title"><i class="fas fa-memory" style="color: #1abc9c;"></i> Memory Management</div>
+                        <div class="category-title">
+                            <i class="fas fa-memory" style="color: #1abc9c;"></i> Memory Management
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
                         <div class="blocks-container">
                             <div class="block memory" draggable="true" data-type="malloc">
                                 <div class="block-icon"><i class="fas fa-box-open"></i></div>
@@ -683,6 +738,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize toolbox sections as collapsed
+            // Initialize all categories
+            document.querySelectorAll('.category').forEach(category => {
+                // Get the blocks container
+                const blocksContainer = category.querySelector('.blocks-container');
+                
+                // Explicitly set initial state to collapsed
+                blocksContainer.style.display = 'none';
+                category.classList.remove('expanded');
+                
+                // Add click handler to this specific category's title
+                const title = category.querySelector('.category-title');
+                title.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Toggle expanded state
+                    const isExpanded = category.classList.contains('expanded');
+                    
+                    // Toggle the state and display
+                    if (isExpanded) {
+                        category.classList.remove('expanded');
+                        blocksContainer.style.display = 'none';
+                    } else {
+                        category.classList.add('expanded');
+                        blocksContainer.style.display = 'grid';
+                    }
+                });
+            });
+
             const workspace = document.getElementById('workspace');
             const workspaceInner = document.getElementById('workspace-inner');
             const gridLines = document.getElementById('grid-lines');
